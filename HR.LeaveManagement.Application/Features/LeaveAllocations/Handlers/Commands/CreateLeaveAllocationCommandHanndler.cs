@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
-using FluentValidation;
 using HR.LeaveManagement.Application.DTOs.LeaveAllocation.Validators;
-using HR.LeaveManagement.Application.DTOs.LeaveRequest.Validators;
-using HR.LeaveManagement.Application.DTOs.LeaveType.Validators;
+using HR.LeaveManagement.Application.Exceptions;
 using HR.LeaveManagement.Application.Features.LeaveAllocations.Requests.Commands;
 using HR.LeaveManagement.Application.Persistence.Contracts;
 using HR.LeaveManagement.Domain;
@@ -29,7 +27,7 @@ namespace HR.LeaveManagement.Application.Features.LeaveAllocations.Handlers.Comm
 
             if (validationResult.IsValid == false)
             {
-                throw new Exception();
+                throw new ValidationException(validationResult);
             }
 
             var leaveAlloaction = _mapper.Map<LeaveAllocation>(request.LeaveAllocationDto);
