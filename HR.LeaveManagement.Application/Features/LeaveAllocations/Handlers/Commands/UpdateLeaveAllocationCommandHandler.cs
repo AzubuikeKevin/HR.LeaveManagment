@@ -1,0 +1,28 @@
+﻿using AutoMapper;
+using HR.LeaveManagement.Application.Features.LeaveAllocations.Requests.Commands;
+using HR.LeaveManagement.Application.Persistence.Contracts;
+using MediatR;
+
+namespace HR.LeaveManagement.Application.Features.LeaveAllocations.Handlers.Commands
+{
+    public class UpdateLeaveAllocationCommandHandler : IRequestHandler<UpdateLeaveAllocationCommand, Unit>
+    {
+        private readonly ILeaveAllocationRepository _leaveAllocationRepository;
+        private readonly IMapper _mappper;
+        public UpdateLeaveAllocationCommandHandler(ILeaveAllocationRepository leaveAllocationRepository, IMapper mapper)
+        {
+            _leaveAllocationRepository = leaveAllocationRepository;
+            _mappper = mapper;
+        }
+
+        public async Task<Unit> Handle(UpdateLeaveAllocationCommand request, CancellationToken cancellationToken)
+        {
+            var leaveAllocation = await _leaveAllocationRepository.Get(request.UpdateLeaveAllocationDto.Id);
+
+            _mappper.Map(request.UpdateLeaveAllocationDto, leaveAllocation);
+
+            await _leaveAllocationRepository.Update(leaveAllocation);
+            return Unit.Value;
+        }
+    }
+}
